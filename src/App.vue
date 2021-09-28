@@ -1,7 +1,7 @@
 <template>
   <h1 class="title">Virk's Spellbook</h1>
   <div class="fl w-25-ns pa2"></div>
-    <div class="w-50 fl">
+    <div class="w-50-l w-100 fl">
       <SearchBar v-model:query="query"/>
       <ItemDisplay :query="query"/>
     </div>
