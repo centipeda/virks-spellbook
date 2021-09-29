@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 WIKIDOT = "http://dnd5e.wikidot.com"
 SPELLS  = WIKIDOT + "/spells"
-SPELL_FILE = "../../data/spells.json"
+SPELL_FILE = os.path.join(os.path.dirname(__file__), "../../data/spells.json")
 
 def get_spell_links(link):
     r = requests.get(link)
@@ -83,6 +83,9 @@ def find_spells(attr, value):
     return [x for x in spell_list if x[attr] == value]
 
 def find_spell(attr, value):
-    return next(x for x in spell_list if x[attr] == value)
+    try:
+        return next(x for x in spell_list if x[attr] == value)
+    except StopIteration:
+        return None
 
 spell_list = load_spell_db()

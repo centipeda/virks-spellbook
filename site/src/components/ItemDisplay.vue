@@ -1,6 +1,6 @@
 <template>
     <div class="item-display w-100">
-        <Item v-for="spell in shown_spells" :spell="spell" :key="spell.title"></Item>
+        <Item v-for="spell in shown_spells" :initialSelect="selected_spells.includes(spell.id)" :spell="spell" :key="spell.title" @selected="selected" @unselected="unselected"></Item>
     </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
     props: ['query'],
     data: function() {
         return {
-            spells: sp
+            spells: sp,
+            selected_spells: []
         }
     },
     mounted: function() {
@@ -40,6 +41,16 @@ export default {
             } else {
                 return []
             }
+        }
+    },
+    methods: {
+        selected: function(id) {
+            this.selected_spells.push(id)
+            this.$emit('update:selected_spells', this.selected_spells)
+        },
+        unselected: function(id) {
+            this.selected_spells.splice(this.selected_spells.indexOf(id), 1)
+            this.$emit('update:selected_spells', this.selected_spells)
         }
     }
 }

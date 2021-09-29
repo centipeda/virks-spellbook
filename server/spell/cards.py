@@ -1,8 +1,6 @@
 
 from PIL import Image, ImageDraw, ImageFont, ImageColor
-import random
-
-import spells
+import os
 
 CARD_W = 750
 CARD_H = 1050
@@ -14,10 +12,13 @@ BODY_FONT_SIZE     = 24
 BLACK    = (0,0,0)
 DARK_RED = ImageColor.getrgb("#58180D")
 
-title_font = ImageFont.truetype("Modesto Condensed Bold.ttf", size=TITLE_FONT_SIZE)
-subtitle_font = ImageFont.truetype("mrs-eaves-small-caps.ttf", size=SUBTITLE_FONT_SIZE)
-body_font = ImageFont.truetype("ScalaSans-RegularLF.otf", size=BODY_FONT_SIZE)
-body_font_bold = ImageFont.truetype("ScalaSans-BoldLF.otf", size=BODY_FONT_SIZE)
+def getpath(path):
+    return os.path.join(os.path.dirname(__file__), path)
+
+title_font = ImageFont.truetype(getpath("Modesto Condensed Bold.ttf"), size=TITLE_FONT_SIZE)
+subtitle_font = ImageFont.truetype(getpath("mrs-eaves-small-caps.ttf"), size=SUBTITLE_FONT_SIZE)
+body_font = ImageFont.truetype(getpath("ScalaSans-RegularLF.otf"), size=BODY_FONT_SIZE)
+body_font_bold = ImageFont.truetype(getpath("ScalaSans-BoldLF.otf"), size=BODY_FONT_SIZE)
 
 def split_line(font, lines, margin, indent=0):
     text = []
@@ -153,8 +154,7 @@ def gen_cards(spell):
         imgs.append(_i)
     return imgs
 
-def make_printable(cards):
-    fname = "printable.pdf"
+def make_printable(cards, file):
     pages = []
     position = 1
     _p = Image.new(mode="RGB", size=(2250, 3000), color=(255, 255, 255))
@@ -176,12 +176,7 @@ def make_printable(cards):
             pages.append(_p)
             _p = Image.new(mode="RGB", size=(2250, 3000), color=(255, 255, 255))
             position = 1
+    if position != 1:
+        pages.append(_p)
     p = pages.pop(0)
-    p.save(fname, save_all=True, append_images=pages)
-    return fname
-    
-        
-cards = []
-for x in range(9):
-    cards.extend(gen_cards(random.choice(spells.spell_list)))
-print(make_printable(cards))
+    p.save(file, format="PDF", save_all=True, title="Spell Cards", append_images=pages)

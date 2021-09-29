@@ -1,11 +1,13 @@
 <template>
-  <h1 class="title">Virk's Spellbook</h1>
-  <div class="fl w-25-ns pa2"></div>
-    <div class="w-50-l w-100 fl">
-      <SearchBar v-model:query="query"/>
-      <ItemDisplay :query="query"/>
-    </div>
-  <div class="fl w-25-ns pa2"></div>
+  <div class="ma1">
+    <h1 class="title">Virk's Spellbook</h1>
+    <div class="fl w-25-ns pa2"></div>
+      <div class="w-50-l w-100 fl">
+        <SearchBar :selection="selection" v-model:query="query"/>
+        <ItemDisplay :query="query" v-model:selected_spells="selection" />
+      </div>
+    <div class="fl w-25-ns pa2"></div>
+  </div>
 </template>
 
 <script>
@@ -20,7 +22,8 @@ export default {
   },
   data: function() {
     return {
-      query: ""
+      query: "",
+      selection: []
     }
   }
 }
