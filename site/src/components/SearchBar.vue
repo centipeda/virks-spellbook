@@ -1,7 +1,8 @@
 <template>
     <div class="search-bar w-100">
         <h2 class="search ma2 normal">Search for a spell...</h2>
-        <input class="search" id="search-text" type="text" @input="$emit('update:query', $event.target.value)" :value="query">
+        <input class="search" id="search-text" type="text" placeholder="ex. 1st-level conjuration ranger"
+        @input="$emit('update:query', $event.target.value)" :value="query">
     </div>
 </template>
 

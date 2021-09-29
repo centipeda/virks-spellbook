@@ -3,11 +3,12 @@
 import requests
 import time
 import json
+import os
 from bs4 import BeautifulSoup
 
 WIKIDOT = "http://dnd5e.wikidot.com"
 SPELLS  = WIKIDOT + "/spells"
-SPELL_FILE = "../src/assets/spells.json"
+SPELL_FILE = "../../data/spells.json"
 
 def get_spell_links(link):
     r = requests.get(link)
@@ -26,8 +27,10 @@ def get_spell_data(link):
     # for dd in data:
     #     print(dd)
 
-
     spell['source']      = data[0][8:]
+    if not data[0].startswith("Source: "):
+        spell['source'] = ""
+        data.insert(0, "")
     spell['type']        = data[1]
     l = data[1].split()
     if 'level' in l[0]:
@@ -46,16 +49,24 @@ def get_spell_data(link):
     spell['link']        = link
     return spell
 
-def update_spell_db():
+def update_spell_db(new_spell_list):
+    with open(SPELL_FILE, "w+") as spell_file:
+        spell_file.write(json.dumps(new_spell_list))
+
+def reload_spell_db():
     tmp_spells = []
+    counter = 1
     for link in get_spell_links(SPELLS):
         print(f"\rloading from {link}...                             ", end="")
         try:
             sp = get_spell_data(link)
-        except:
+            sp["id"] = counter
+        except Exception as e:
             print(f"\n{link} failed to download!")
+            print(e)
         else:
             tmp_spells.append(sp)
+        counter += 1
         time.sleep(0.05)
 
     print("loaded all spells!                                        ")
@@ -63,6 +74,8 @@ def update_spell_db():
         spell_file.write(json.dumps(tmp_spells))
 
 def load_spell_db():
+    if not os.path.exists(SPELL_FILE):
+        return []
     with open(SPELL_FILE) as spell_file:
         return json.loads(spell_file.read())
 
@@ -73,4 +86,3 @@ def find_spell(attr, value):
     return next(x for x in spell_list if x[attr] == value)
 
 spell_list = load_spell_db()
-# update_spell_db()

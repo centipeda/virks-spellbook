@@ -1,5 +1,7 @@
 <template>
-<div class="item w-100 cf pa2 mt1" @click="opened = !opened">
+<div class="item w-100 cf pa2 mt1">
+    <div v-if="opened" class="fl tc toggler .v-mid" @click="opened = !opened"><strong>-</strong></div>
+    <div v-else class="fl tc toggler .v-mid" @click="opened = !opened"><strong>+</strong></div>
     <div class="w-30 fl spell tl"><strong>{{ spell.title }}</strong></div>
     <div class="w-40 fr spell tr">{{ spell.type }}</div>
     <div v-if="opened" class="w-100 fl">
@@ -42,5 +44,11 @@ export default {
 .detail {
     font-size: 12pt;
     font-family: 'ScalaSansRegular';
+}
+.toggler {
+    width: 5%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 </style>

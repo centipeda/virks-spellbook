@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import sp from '../assets/spells.json'
+import sp from '../../../data/spells.json'
 import Item from './Item.vue'
 
 export default {
