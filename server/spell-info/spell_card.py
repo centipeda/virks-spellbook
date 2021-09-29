@@ -52,11 +52,17 @@ def split_line(font, lines, margin, indent=0):
 
 def draw_border(draw):
     border_width = 20
+    border_padding = 5
     border_color = BLACK
     draw.line((0, 0, 0, CARD_H), width=border_width*2, fill=border_color)
     draw.line((CARD_W, 0, CARD_W, CARD_H), width=border_width*2, fill=border_color)
     draw.line((0, 0, CARD_W, 0), width=border_width*2, fill=border_color)
     draw.line((0, CARD_H, CARD_W, CARD_H), width=border_width*2, fill=border_color)
+
+    draw.line((0, 0, 0, CARD_H), width=border_padding*2, fill=(255, 255, 255))
+    draw.line((CARD_W, 0, CARD_W, CARD_H), width=border_padding*2, fill=(255, 255, 255))
+    draw.line((0, 0, CARD_W, 0), width=border_padding*2, fill=(255, 255, 255))
+    draw.line((0, CARD_H, CARD_W, CARD_H), width=border_padding*2, fill=(255, 255, 255))
     return draw
 
 def draw_title(draw, text):
@@ -87,7 +93,7 @@ def gen_cards(spell):
     # draw title
     draw = draw_title(draw, spell["title"])
     # draw spell level
-    draw = draw_subtitle(draw, " ".join([spell["level"], spell["school"]]))
+    draw = draw_subtitle(draw, spell["type"])
 
     _l = 75
     _w = body_font_bold.getlength("Casting Time: ")
@@ -140,16 +146,42 @@ def gen_cards(spell):
         _d = ImageDraw.Draw(_i)
         _d = draw_border(_d)
         _d = draw_title(_d, spell["title"])
-        _d = draw_subtitle(_d, " ".join([spell["level"], spell["school"]]))
+        _d = draw_subtitle(_d, spell["type"])
         offset = (CARD_W - body_font.getlength("(cont'd)"))/2
         _d.text((offset, 150), "(cont'd)", font=body_font, fill=(0,0,0))
         _d = draw_desc_at(_d, lines[:break_line], (_l, _h), 27)
         imgs.append(_i)
-    
     return imgs
 
+def make_printable(cards):
+    fname = "printable.pdf"
+    pages = []
+    position = 1
+    _p = Image.new(mode="RGB", size=(2250, 3000), color=(255, 255, 255))
+    while cards:
+        if position > 3:
+            x = 75
+            _pos = position - 3
+        else:
+            x = 75 + CARD_H
+            _pos = position
+        y = 300 + CARD_W*(_pos-1)
 
-cards = gen_cards(random.choice(spells.spell_list))
-# cards = gen_cards(spells.find_spell('title', 'Symbol'))
-for card in cards:
-    card.show()
+        card = cards.pop(0)
+        card = card.transpose(Image.ROTATE_270)
+        _p.paste(card, (x, y))
+
+        position += 1
+        if position > 6:
+            pages.append(_p)
+            _p = Image.new(mode="RGB", size=(2250, 3000), color=(255, 255, 255))
+            position = 1
+    p = pages.pop(0)
+    p.save(fname, save_all=True, append_images=pages)
+    return fname
+    
+        
+cards = []
+for x in range(9):
+    cards.extend(gen_cards(random.choice(spells.spell_list)))
+print(make_printable(cards))
