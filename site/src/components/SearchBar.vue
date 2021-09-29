@@ -4,7 +4,7 @@
         <input class="search" id="search-text" type="text" placeholder="ex. ranger 1st-level conjuration"
         @input="$emit('update:query', $event.target.value)" :value="query">
     </div>
-    <a class="w-100" @click="getSpellCards" :href="'http://localhost:5000/spellcard?cards='+ selection.join(',')">Get Spell Cards: {{ selection }}</a>
+    <a class="w-100" @click="getSpellCards" :href="'/spellcard?cards='+ selection.join(',')">Get Spell Cards: {{ selection }}</a>
 </template>
 
 <script>
