@@ -4,7 +4,9 @@
         <input class="search" id="search-text" type="text" placeholder="ex. ranger 1st-level conjuration"
         @input="$emit('update:query', $event.target.value)" :value="query">
     </div>
-    <a class="w-100" @click="getSpellCards" :href="'/spellcard?cards='+ selection.join(',')">Get Spell Cards: {{ selection }}</a>
+    <a target="_blank" class="w-40 f5 link br-pill pv2 mt2 mb2 dib get-btn" @click="getSpellCards" :href="'/spellcard?cards='+ selection.join(',')">
+        Get selected as printable spell cards
+    </a>
 </template>
 
 <script>
@@ -39,5 +41,10 @@ export default {
     }
     #search-submit {
         width: 25%;
+    }
+    .get-btn {
+        background-color: #add8e6;
+        color: black;
+        font-family: 'ScalaSansRegular';
     }
 </style>

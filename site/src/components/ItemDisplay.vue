@@ -29,6 +29,7 @@ export default {
                 return this.spells.filter(function(s) {
                     return self.query.toLowerCase().split(" ").reduce((lastWordHit, q) => 
                         lastWordHit && (
+                        self.selected_spells.includes(s.id) ||
                         s.title.toLowerCase().includes(q) ||
                         s.cast_time.toLowerCase().includes(q) ||
                         s.range.toLowerCase().includes(q) ||
@@ -39,7 +40,7 @@ export default {
                         s.duration.toLowerCase().includes(q)), true)
                 })
             } else {
-                return []
+                return this.spells.filter(s => this.selected_spells.includes(s.id))
             }
         }
     },
