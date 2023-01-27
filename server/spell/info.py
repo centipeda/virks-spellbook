@@ -53,6 +53,10 @@ def update_spell_db(new_spell_list):
     with open(SPELL_FILE, "w+") as spell_file:
         spell_file.write(json.dumps(new_spell_list))
 
+def show_spell_links():
+    for link in get_spell_links(SPELLS):
+        print(f"found spell: {link}")
+
 def reload_spell_db():
     tmp_spells = []
     counter = 1
